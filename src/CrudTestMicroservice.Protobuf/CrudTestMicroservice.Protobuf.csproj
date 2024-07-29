@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Version>0.0.11</Version>
+    <PackageId>CrudTestMicroservice.Protobuf</PackageId>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.23.3" />
+    <PackageReference Include="Grpc.Core.Api" Version="2.54.0" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.2.2" />
+    <PackageReference Include="Google.Api.CommonProtos" Version="2.10.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.55.1" >
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Protobuf Include="Protos\public_messages.proto" ProtoRoot="Protos\" GrpcServices="Both" />
+    <Protobuf Include="Protos\customer.proto" ProtoRoot="Protos\" GrpcServices="Both" />
+  </ItemGroup>
+</Project>

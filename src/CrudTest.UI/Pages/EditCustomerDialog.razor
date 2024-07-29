@@ -1,0 +1,48 @@
+@using Google.Protobuf.WellKnownTypes
+@using CrudTest.UI.Services
+<MudDialog >
+    <DialogContent >
+        <MudStack>
+            <MudTextField T="string" @bind-Value="UpdateCustomerRequest.FirstName" Variant="Variant.Outlined" Label="FirstName"></MudTextField>
+            <MudTextField T="string" @bind-Value="UpdateCustomerRequest.LastName" Variant="Variant.Outlined" Label="LastName"></MudTextField>
+            <MudTextField T="string" @bind-Value="UpdateCustomerRequest.PhoneNumber" Variant="Variant.Outlined" Label="PhoneNumber"></MudTextField>
+            <MudTextField T="string" @bind-Value="UpdateCustomerRequest.Email" Variant="Variant.Outlined" Label="Email"></MudTextField>
+            <MudTextField T="string" @bind-Value="UpdateCustomerRequest.BankAccountNumber" Variant="Variant.Outlined" Label="BankAccountNumber"></MudTextField>
+            <MudDatePicker Variant="Variant.Outlined" Label="DateOfBirth" @bind-Date="DateOfBirth" PickerVariant="PickerVariant.Dialog"/>
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Size="Size.Large" Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+        <MudButton Size="Size.Large" Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
+    [Parameter]
+    public UpdateCustomerRequest UpdateCustomerRequest { get; set; } = new ();
+    DateTime? DateOfBirth = DateTime.Today.AddDays(-1);
+
+    protected override Task OnInitializedAsync()
+    {
+        DateOfBirth = UpdateCustomerRequest.DateOfBirth.ToDateTime();
+        return base.OnInitializedAsync();
+    }
+
+    private async Task Submit()
+    {
+        try
+        {
+            UpdateCustomerRequest.DateOfBirth = Timestamp.FromDateTime(DateTime.SpecifyKind(DateOfBirth.Value, DateTimeKind.Utc));
+            var result = await CustomerContract.UpdateCustomerAsync(UpdateCustomerRequest);
+            MudDialog.Close(DialogResult.Ok(new KeyValuePair<bool, string>(true, "OK")));
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            MudDialog.Close(DialogResult.Ok(new KeyValuePair<bool, string>(false, e.Message.GetCorrectExceptionMessage())));
+        }
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+}

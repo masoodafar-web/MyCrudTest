@@ -1,0 +1,43 @@
+﻿@page "/"
+@using CrudTestMicroservice.Protobuf.Protos.Customer
+
+<PageTitle>Index</PageTitle>
+
+<MudText Typo="Typo.h3" GutterBottom="true">Hello, world!</MudText>
+<MudText Class="mb-8">Welcome to your new app, powered by MudBlazor!</MudText>
+
+@if ( _isShowSuccessOnAddNew == 1)
+{
+    <MudAlert Severity="Severity.Success" Square="true" Class="my-2" ContentAlignment="HorizontalAlignment.Left" ShowCloseIcon="true" CloseIconClicked="@(() => {  _isShowSuccessOnAddNew = 0; })">Success Opration</MudAlert>
+}
+@if ( _isShowSuccessOnAddNew == 2)
+{
+    <MudAlert Severity="Severity.Error" Square="true" Class="my-2" ContentAlignment="HorizontalAlignment.Left" ShowCloseIcon="true" CloseIconClicked="@(() => {  _isShowSuccessOnAddNew = 0; })">Errors: @(_error)</MudAlert>
+}
+<MudPaper>
+    <MudButton @onclick="OpenDialogAsync" Variant="Variant.Filled" Color="Color.Primary" Class="my-4 mx-1">Add New Item</MudButton>
+
+    <MudDataGrid @ref="mudDataGrid" T="GetAllCustomerByFilterResponseModel" ServerData="GetServerData" Virtualize="true" FixedHeader="true" Height="350px" 
+                 Bordered="true" Dense="true">
+        <Columns>
+            @* <PropertyColumn Property="x => x.Id" Title="Nr"/> *@
+            <PropertyColumn Property="x => x.FirstName"/>
+            <PropertyColumn Property="x => x.LastName"/>
+            <PropertyColumn Property="@(x => x.DateOfBirth.ToDateTime().ToString("yyyy/MM/dd"))"/>
+            <PropertyColumn Property="x => x.PhoneNumber"/>
+            <PropertyColumn Property="x => x.Email"/>
+            <PropertyColumn Property="x => x.BankAccountNumber"/>
+            <TemplateColumn CellClass="d-flex justify-end">
+                <CellTemplate>
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="()=>OnEditClick(context.Item)"/>
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="()=>OnDeleteClick(context.Item.Id)"/>
+                </CellTemplate>
+            </TemplateColumn>
+
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="GetAllCustomerByFilterResponseModel"/>
+        </PagerContent>
+    </MudDataGrid>
+
+</MudPaper>
